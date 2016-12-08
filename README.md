@@ -3,6 +3,7 @@ Valify - Two Factor Authentication Plugin
 Valify is two-factor authentication plugin that uses OTP sent either via SMS , Email or voice
 
 This plugin requires Api key Generated from valify.solutionsinfini.com and need to add on config/setting for plugin section under admin section
+For Api Generation you need to contact solutionsinfini.com
 
 
 ##Installation:
