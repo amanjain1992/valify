@@ -24,8 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2016120704;        // The current plugin version (Date: YYYYMMDDXX)
-$plugin->requires  = 2014050800;        // Requires this Moodle version
-$plugin->component = 'auth_valify';     // Full name of the plugin (used for diagnostics)
+$plugin->version   = 2016120704;        // The current plugin version (Date: YYYYMMDDXX).
+$plugin->requires  = 2014050800;        // Requires this Moodle version.
+$plugin->component = 'auth_valify';     // Full name of the plugin (used for diagnostics).
 $plugin->release = 'v1.0';
 $plugin->maturity = MATURITY_STABLE;

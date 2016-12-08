@@ -56,13 +56,13 @@ class auth_plugin_valify extends auth_plugin_base {
      * @param string $password The password
      * @return bool Authentication success or failure.
      */
-    function user_login ($username, $password) {
+    public function user_login ($username, $password) {
         global $CFG, $DB;
-        if ($user = $DB->get_record('user', array('username'=>$username, 'mnethostid'=>$CFG->mnet_localhost_id))) {
-            $valid_login  =  validate_internal_user_password($user, $password);
-            if($valid_login && $user->auth == 'valify'){
-                $api_key = get_config("auth/valify", 'auth_valify_key');
-                if (!empty($api_key)) {
+        if ($user = $DB->get_record('user', array('username' => $username, 'mnethostid' => $CFG->mnet_localhost_id))) {
+            $validlogin = validate_internal_user_password($user, $password);
+            if($validlogin && $user->auth == 'valify') {
+                $apikey = get_config("auth/valify", 'auth_valify_key');
+                if (!empty($apikey)) {
                         $curl = curl_init();
 
                         curl_setopt_array($curl, array(
@@ -76,7 +76,7 @@ class auth_plugin_valify extends auth_plugin_base {
                         CURLOPT_HTTPHEADER => array(
                         "X-Api-Format: json",
                         "X-Api-Method: otp",
-                        "X-Auth-Key:".$api_key
+                        "X-Auth-Key:".$apikey
                         )
                         ));
 
@@ -88,10 +88,10 @@ class auth_plugin_valify extends auth_plugin_base {
                             redirect($CFG->wwwroot.'/auth/valify/error.php');
                             return false;
                         } else {
-                            $response = json_decode($response,true);
+                            $response = json_decode($response, true);
                             if ($response['status'] == 'OK') {
-                                $token_id = $response['data']['token_id'];
-                                $_SESSION['valify_token_id'] = $token_id;
+                                $tokenid = $response['data']['token_id'];
+                                $_SESSION['valify_token_id'] = $tokenid;
                                 $_SESSION['valify_user_validation'] = $user;
                             } else {
                                 redirect($CFG->wwwroot.'/auth/valify/error.php');
@@ -99,24 +99,28 @@ class auth_plugin_valify extends auth_plugin_base {
                             }
                         }
                     return true;
-                }
+                	}
             }
         }
         return false;
     }
 
-    function loginpage_hook() {
+    public function loginpage_hook() {
     }
 
-    public function user_authenticated_hook(&$user,$username,$password) {
+    /**
+     * Hook is being called on successfull user authentication.
+     *
+     * @return bool
+     */
+    public function user_authenticated_hook(&$user, $username, $password) {
         global $CFG, $OUTPUT;
-        if($user->auth == 'valify'){
+        if($user->auth == 'valify') {
             if (isset($_SESSION['valify_token_id'])) {
-                $token_id = $_SESSION['valify_token_id'];
-                redirect($CFG->wwwroot.'/auth/valify/authenticate.php?token_id='.$token_id);
+                $tokenid = $_SESSION['valify_token_id'];
+                redirect($CFG->wwwroot.'/auth/valify/authenticate.php?token_id='.$tokenid);
             }
         }
-            
     }
     /**
      * Updates the user's password.
@@ -128,7 +132,7 @@ class auth_plugin_valify extends auth_plugin_base {
      * @return boolean result
      *
      */
-    function user_update_password($user, $newpassword) {
+    public function user_update_password($user, $newpassword) {
         $user = get_complete_user_data('id', $user->id);
         // This will also update the stored hash to the latest algorithm
         // if the existing hash is using an out-of-date algorithm (or the
@@ -136,7 +140,7 @@ class auth_plugin_valify extends auth_plugin_base {
         return update_internal_user_password($user, $newpassword);
     }
 
-    function prevent_local_passwords() {
+    public function prevent_local_passwords() {
         return false;
     }
 
@@ -145,7 +149,7 @@ class auth_plugin_valify extends auth_plugin_base {
      *
      * @return bool
      */
-    function is_internal() {
+    public function is_internal() {
         return true;
     }
 
@@ -155,7 +159,7 @@ class auth_plugin_valify extends auth_plugin_base {
      *
      * @return bool
      */
-    function can_change_password() {
+    public function can_change_password() {
         return true;
     }
 
@@ -165,7 +169,7 @@ class auth_plugin_valify extends auth_plugin_base {
      *
      * @return moodle_url
      */
-    function change_password_url() {
+    public function change_password_url() {
         return null;
     }
 
@@ -174,7 +178,7 @@ class auth_plugin_valify extends auth_plugin_base {
      *
      * @return bool
      */
-    function can_reset_password() {
+    public function can_reset_password() {
         return true;
     }
 
@@ -183,7 +187,7 @@ class auth_plugin_valify extends auth_plugin_base {
      *
      * @return bool
      */
-    function can_be_manually_set() {
+    public function can_be_manually_set() {
         return true;
     }
 
@@ -195,14 +199,14 @@ class auth_plugin_valify extends auth_plugin_base {
      *
      * @param array $page An object containing all the data for this page.
      */
-    function config_form($config, $err, $user_fields) {
-        include "config.html";
+    public function config_form($config, $err, $user_fields) {
+        include("config.html");
     }
 
     /**
      * Processes and stores configuration data for this authentication plugin.
      */
-    function process_config($config) {
+    public function process_config($config) {
         set_config('auth_valify_key', trim($config->auth_valify_key), 'auth/valify');
         return true;
     }

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -35,14 +34,14 @@ $CFG->additionalhtmlhead .= '<meta name="robots" content="noindex" />';
 
 redirect_if_major_upgrade_required();
 
-$testsession = optional_param('testsession', 0, PARAM_INT); // test session works properly
-$cancel      = optional_param('cancel', 0, PARAM_BOOL);      // redirect to frontpage, needed for loginhttps
+$testsession = optional_param('testsession', 0, PARAM_INT); //Test session works properly
+$cancel      = optional_param('cancel', 0, PARAM_BOOL);      //Redirect to frontpage, needed for loginhttps
 
 if ($cancel) {
     redirect(new moodle_url('/'));
 }
 
-//HTTPS is required in this page when $CFG->loginhttps enabled
+// HTTPS is required in this page when $CFG->loginhttps enabled.
 $PAGE->https_required();
 
 $context = context_system::instance();
@@ -50,15 +49,15 @@ $PAGE->set_url("$CFG->httpswwwroot/auth/valify/authenticate.php");
 $PAGE->set_context($context);
 $PAGE->set_pagelayout('login');
 
-//If otp Expires or in case user want to re send th eotp
-if (isset($_REQUEST['resend']) && $_REQUEST['resend'] == 1){
-    $api_key = get_config("auth/valify", 'auth_valify_key');
-    $userDetail = $_SESSION['valify_user_validation'];
-    $userDetail  = json_decode(json_encode($userDetail),true);
-    if (!empty($api_key)) {
+// If otp Expires or in case user want to re send th eotp.
+if (isset($_REQUEST['resend']) && $_REQUEST['resend'] == 1) {
+    $apikey = get_config("auth/valify", 'auth_valify_key');
+    $userdetail = $_SESSION['valify_user_validation'];
+    $userdetail  = json_decode(json_encode($userdetail), true);
+    if (!empty($apikey)) {
         $curl = curl_init();
         curl_setopt_array($curl, array(
-        CURLOPT_URL => "api-valify.solutionsinfini.com/v1/?mobile=".$userDetail['phone1']."&email=".$userDetail['email'],
+        CURLOPT_URL => "api-valify.solutionsinfini.com/v1/?mobile=".$userdetail['phone1']."&email=".$userdetail['email'],
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,
@@ -68,7 +67,7 @@ if (isset($_REQUEST['resend']) && $_REQUEST['resend'] == 1){
         CURLOPT_HTTPHEADER => array(
         "X-Api-Format: json",
         "X-Api-Method: otp",
-        "X-Auth-Key:".$api_key
+        "X-Auth-Key:".$apikey
         )
         ));
 
@@ -88,12 +87,11 @@ if (isset($_REQUEST['resend']) && $_REQUEST['resend'] == 1){
                 redirect($CFG->wwwroot.'/auth/valify/error.php');
                 return false;
             }
-            
         }
         return true;
     }
 }
-/// Initialize variables
+// Initialize variables.
 $errormsg = '';
 $errorcode = 0;
 $vaildate = false;
@@ -111,13 +109,13 @@ if (!empty($_REQUEST['token_id'])){
 if (empty($token_id)){
     redirect($CFG->wwwroot.'/login/index.php');
 }
-//Validating OTP given by user
+// Validating OTP given by user
 if ($vaildate) {
     $curl = curl_init();
     $token = required_param('token', PARAM_TEXT);
     $token_id = required_param('token_id', PARAM_TEXT);
 
-    $api_key = get_config("auth/valify", 'auth_valify_key');
+    $apikey = get_config("auth/valify", 'auth_valify_key');
     curl_setopt_array($curl, array(
       CURLOPT_URL => "api-valify.solutionsinfini.com/v1/?token=".$token."&method=otp.verify&token_id=".$token_id,
       CURLOPT_RETURNTRANSFER => true,
@@ -129,7 +127,7 @@ if ($vaildate) {
       CURLOPT_HTTPHEADER => array(
         "X-Api-Format: json",
         "X-Api-Method:  otp.verify",
-        "X-Auth-Key:".$api_key
+        "X-Auth-Key:".$apikey
       )
     ));
 
@@ -142,8 +140,8 @@ if ($vaildate) {
         redirect($CFG->wwwroot.'/auth/valify/error.php');
         return false;
     } else {
-        $response =  json_decode($response,true);
-        if (!empty($_SESSION['valify_user_validation'])  && $response['status'] == 'OK'){
+        $response =  json_decode($response, true);
+        if (!empty($_SESSION['valify_user_validation'])  && $response['status'] =='OK'){
             complete_user_login($_SESSION['valify_user_validation']);
         }
         if (isloggedin() and !isguestuser() && $response['status'] == 'OK') {
@@ -154,13 +152,13 @@ if ($vaildate) {
     }
 }
 
-/// Define variables used in page
+// Define variables used in page
 $site = get_site();
 
 $loginsite = "Authenticate";
 $PAGE->navbar->add($loginsite);
 
-// make sure we really are on the https page when https login required
+// Make sure we really are on the https page when https login required.
 $PAGE->verify_https_required();
 
 $PAGE->set_title("$site->fullname: $loginsite");
@@ -168,11 +166,11 @@ $PAGE->set_heading("$site->fullname");
 
 echo $OUTPUT->header();
 
-include("index_form.html");
+require("index_form.html");
 if ($errormsg) {
     $PAGE->requires->js_init_call('M.util.focus_login_error', null, true);
 } else if (!empty($CFG->loginpageautofocus)) {
-    //focus username or password
+    // Focus username or password.
     $PAGE->requires->js_init_call('M.util.focus_login_form', null, true);
 }
 
