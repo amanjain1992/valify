@@ -1,0 +1,67 @@
+<?php
+if (!empty($CFG->loginpasswordautocomplete)) {
+    $autocomplete = 'autocomplete="off"';
+} else {
+    $autocomplete = '';
+}
+if (empty($CFG->authloginviaemail)) {
+    $strusername = get_string('username');
+} else {
+    $strusername = get_string('usernameemail');
+}
+?>
+<div class="loginbox clearfix <?php echo $columns ?>">
+  <div class="loginpanel">
+<?php
+  if (($CFG->registerauth == 'email') || !empty($CFG->registerauth)) { ?>
+      <div class="skiplinks"><a class="skip" href="signup.php"><?php print_string("tocreatenewaccount"); ?></a></div>
+<?php
+  } ?>
+    <h2>Authenticate</h2>
+      <div class="subcontent loginsub">
+        <?php
+          if (!empty($errormsg)) {
+              echo html_writer::start_tag('div', array('class' => 'loginerrors'));
+              echo html_writer::link('#', $errormsg, array('id' => 'loginerrormessage', 'class' => 'accesshide'));
+              echo $OUTPUT->error_text($errormsg);
+              echo html_writer::end_tag('div');
+          }
+        ?>
+        <form action="<?php echo $CFG->httpswwwroot; ?>/auth/valify/authenticate.php" method="post" <?php echo $autocomplete; ?> >
+          <div class="loginform">
+           <div class="form-label"><label for="token">OTP</label></div>
+           <div class="form-input">
+              <input type="text" name="token" id="token" size="15" value="" />
+            </div>
+          </div>
+          <div class="clearer"><!-- --></div>
+          <input type="hidden" name="token_id" value=<?php echo $token_id; ?> />
+          <input type="hidden" name="vaildate" value="1" />
+           <div class="loginform">
+          <div class="form-label"><label></label></div>
+          <div class="form-input">
+          <input type="submit" id="authenticatebtn" value="Verify" /> &nbsp;
+          <a href="<?php echo $CFG->httpswwwroot; ?>/auth/valify/authenticate.php?resend=1">Resend</a>
+          </div>
+          </div>
+          <div class="clearer"><!-- --></div>
+        </form>
+        <div class="desc">
+            <?php
+                echo get_string("cookiesenabled");
+                echo $OUTPUT->help_icon('cookiesenabled');
+            ?>
+        </div>
+      </div>
+     </div>
+<?php if (!empty($potentialidps)) { ?>
+    <div class="subcontent potentialidps">
+        <h6><?php print_string('potentialidps', 'auth'); ?></h6>
+        <div class="potentialidplist">
+<?php foreach ($potentialidps as $idp) {
+    echo  '<div class="potentialidp"><a href="' . $idp['url']->out() . '" title="' . $idp['name'] . '">' . $OUTPUT->render($idp['icon'], $idp['name']) . $idp['name'] . '</a></div>';
+} ?>
+        </div>
+    </div>
+<?php } ?>
+</div>
