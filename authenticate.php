@@ -58,7 +58,7 @@ if (isset($_REQUEST['resend']) && $_REQUEST['resend'] == 1){
     if (!empty($api_key)) {
         $curl = curl_init();
         curl_setopt_array($curl, array(
-        CURLOPT_URL => "api-valify.solutionsinfini.co/v1/?mobile=".$userDetail['phone1']."&email=".$userDetail['email'],
+        CURLOPT_URL => "api-valify.solutionsinfini.com/v1/?mobile=".$userDetail['phone1']."&email=".$userDetail['email'],
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,
@@ -119,7 +119,7 @@ if ($vaildate) {
 
     $api_key = get_config("auth/valify", 'auth_valify_key');
     curl_setopt_array($curl, array(
-      CURLOPT_URL => "api-valify.solutionsinfini.co/v1/?token=".$token."&method=otp.verify&token_id=".$token_id,
+      CURLOPT_URL => "api-valify.solutionsinfini.com/v1/?token=".$token."&method=otp.verify&token_id=".$token_id,
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_ENCODING => "",
       CURLOPT_MAXREDIRS => 10,
