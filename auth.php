@@ -66,7 +66,7 @@ class auth_plugin_valify extends auth_plugin_base {
                         $curl = curl_init();
 
                         curl_setopt_array($curl, array(
-                        CURLOPT_URL => "api-valify.solutionsinfini.com/v1/?mobile=".$user->phone1."&email=".$user->email,
+                        CURLOPT_URL => "https://api-valify.solutionsinfini.com/v1/?mobile=".$user->phone1."&email=".$user->email,
                         CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_ENCODING => "",
                         CURLOPT_MAXREDIRS => 10,
