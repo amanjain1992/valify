@@ -117,7 +117,7 @@ if ($vaildate) {
 
     $apikey = get_config("auth/valify", 'auth_valify_key');
     curl_setopt_array($curl, array(
-      CURLOPT_URL => "api-valify.solutionsinfini.com/v1/?token=".$token."&method=otp.verify&token_id=".$token_id,
+      CURLOPT_URL => "https://api-valify.solutionsinfini.com/v1/?token=".$token."&method=otp.verify&token_id=".$token_id,
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_ENCODING => "",
       CURLOPT_MAXREDIRS => 10,
