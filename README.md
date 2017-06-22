@@ -5,7 +5,7 @@ Valify is two-factor authentication plugin that uses OTP sent either via SMS , E
 This plugin requires Api key Generated from valify.solutionsinfini.com and need to add on config/setting for plugin section under admin section.
 For Api Generation you need to contact solutionsinfini.com
 
-
+[a link](https://accounts.solutionsinfini.com/)
 ##Installation:
 To install these plugins use moodle plugin installation interface to upload valify.zip and follow installation steps (use *Authentication method* as plugin type).
 
